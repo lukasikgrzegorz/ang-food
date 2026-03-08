@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Food We Eat – Nauka Słówek</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fff9f0;
+    --primary: #ff7043;
+    --secondary: #42a5f5;
+    --accent: #66bb6a;
+    --yellow: #ffca28;
+    --purple: #ab47bc;
+    --card-bg: #ffffff;
+    --shadow: 0 8px 32px rgba(0,0,0,0.10);
+    --radius: 24px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Baloo 2', cursive;
+    background: var(--bg);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background blobs */
+  body::before {
+    content: '';
+    position: fixed; top: -100px; left: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, #ffe0b2 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+    animation: blobMove 8s ease-in-out infinite alternate;
+  }
+  body::after {
+    content: '';
+    position: fixed; bottom: -80px; right: -80px;
+    width: 350px; height: 350px;
+    background: radial-gradient(circle, #b3e5fc 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+    animation: blobMove2 10s ease-in-out infinite alternate;
+  }
+  @keyframes blobMove { from { transform: translate(0,0) scale(1); } to { transform: translate(40px,60px) scale(1.1); } }
+  @keyframes blobMove2 { from { transform: translate(0,0) scale(1); } to { transform: translate(-30px,-50px) scale(1.15); } }
+
+  #app { position: relative; z-index: 1; }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #ff7043 0%, #ff9800 50%, #ffca28 100%);
+    padding: 28px 20px 22px;
+    text-align: center;
+    border-radius: 0 0 40px 40px;
+    box-shadow: 0 6px 24px rgba(255,112,67,0.3);
+  }
+  header h1 {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2rem, 6vw, 3rem);
+    color: white;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+    letter-spacing: -1px;
+  }
+  header .subtitle {
+    color: rgba(255,255,255,0.9);
+    font-size: 1rem;
+    margin-top: 4px;
+    font-weight: 600;
+  }
+  .stars { font-size: 1.4rem; letter-spacing: 4px; }
+
+  /* MODE SELECTOR */
+  .mode-bar {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 24px 20px 10px;
+    flex-wrap: wrap;
+  }
+  .mode-btn {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: 3px solid transparent;
+    border-radius: 50px;
+    padding: 10px 28px;
+    cursor: pointer;
+    transition: all .2s;
+    outline: none;
+  }
+  .mode-btn.easy {
+    background: #e8f5e9;
+    color: #388e3c;
+    border-color: #a5d6a7;
+  }
+  .mode-btn.easy.active, .mode-btn.easy:hover {
+    background: #66bb6a;
+    color: white;
+    border-color: #388e3c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(102,187,106,0.4);
+  }
+  .mode-btn.hard {
+    background: #fce4ec;
+    color: #c62828;
+    border-color: #ef9a9a;
+  }
+  .mode-btn.hard.active, .mode-btn.hard:hover {
+    background: #ef5350;
+    color: white;
+    border-color: #b71c1c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(239,83,80,0.4);
+  }
+  .mode-label {
+    font-size: 0.75rem;
+    opacity: 0.75;
+    display: block;
+    font-weight: 400;
+  }
+
+  /* SCORE BAR */
+  .score-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 8px 20px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #555;
+  }
+  .score-pill {
+    background: white;
+    border-radius: 50px;
+    padding: 6px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    color: var(--primary);
+    font-size: 1.2rem;
+    font-weight: 800;
+  }
+  .progress-pill {
+    background: white;
+    border-radius: 50px;
+    padding: 6px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    color: var(--secondary);
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  /* WORD GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    padding: 20px 24px 30px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  /* WORD CARD */
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 16px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    transition: transform .2s, box-shadow .2s;
+    animation: cardIn .4s ease both;
+    border: 3px solid transparent;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    border-radius: 24px 24px 0 0;
+  }
+  .card:nth-child(4n+1)::before { background: var(--primary); }
+  .card:nth-child(4n+2)::before { background: var(--secondary); }
+  .card:nth-child(4n+3)::before { background: var(--accent); }
+  .card:nth-child(4n+4)::before { background: var(--purple); }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.14); }
+  .card.correct { border-color: var(--accent); background: #f1f8f1; }
+  .card.wrong { border-color: var(--primary); background: #fff5f5; animation: shake .4s ease; }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%,60% { transform: translateX(-6px); }
+    40%,80% { transform: translateX(6px); }
+  }
+
+  .card img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #f5f5f5;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  /* LETTER INPUTS */
+  .letter-row {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+  }
+
+  /* EASY MODE: individual letter boxes */
+  .letter-box {
+    width: 32px;
+    height: 38px;
+    border: 2px solid #90caf9;
+    border-radius: 8px;
+    text-align: center;
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #333;
+    background: #f0f8ff;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+    caret-color: var(--primary);
+    flex-shrink: 0;
+  }
+  .letter-box:focus {
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(66,165,245,0.25);
+    background: #e3f2fd;
+  }
+  .letter-box.filled-hint {
+    color: #42a5f5;
+    font-weight: 800;
+    background: #e8f4fd;
+    border-color: #64b5f6;
+  }
+
+  /* SPACE between word parts */
+  .letter-space {
+    width: 8px;
+    flex-shrink: 0;
+  }
+
+  /* HARD MODE: single text input */
+  .word-input {
+    width: 100%;
+    max-width: 180px;
+    height: 44px;
+    border: 2.5px solid #d0d0d0;
+    border-radius: 12px;
+    text-align: center;
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #333;
+    background: white;
+    outline: none;
+    padding: 0 12px;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .word-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(255,112,67,0.2);
+  }
+  .word-input::placeholder { color: #bbb; font-weight: 400; font-size: 1rem; }
+
+  .card-status {
+    font-size: 1.4rem;
+    min-height: 1.6rem;
+  }
+
+  .check-btn {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--secondary), #1e88e5);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 8px 22px;
+    cursor: pointer;
+    transition: all .2s;
+    box-shadow: 0 3px 10px rgba(66,165,245,0.35);
+  }
+  .check-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(66,165,245,0.45); }
+  .check-btn:disabled { opacity: 0.5; cursor: default; transform: none; }
+
+  /* HINT (correct word shown on wrong) */
+  .hint {
+    font-size: 0.85rem;
+    color: #e53935;
+    font-weight: 600;
+    text-align: center;
+    min-height: 1.1rem;
+  }
+
+  /* FOOTER BUTTONS */
+  .footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 10px 24px 40px;
+    flex-wrap: wrap;
+  }
+  .btn-finish {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #ff7043, #ff9800);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 40px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(255,112,67,0.4);
+    transition: all .2s;
+    letter-spacing: 0.5px;
+  }
+  .btn-finish:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(255,112,67,0.5); }
+
+  .btn-restart {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1rem;
+    font-weight: 700;
+    background: white;
+    color: #666;
+    border: 2px solid #ddd;
+    border-radius: 50px;
+    padding: 12px 28px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .btn-restart:hover { background: #f5f5f5; border-color: #bbb; transform: translateY(-2px); }
+
+  /* RESULTS SCREEN */
+  #results {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+    text-align: center;
+    padding: 40px 24px;
+    gap: 20px;
+    animation: fadeIn .6s ease;
+  }
+  @keyframes fadeIn { from { opacity:0; transform: scale(0.95); } to { opacity:1; transform: scale(1); } }
+  #results .big-emoji { font-size: 5rem; animation: bounce 1s ease infinite alternate; }
+  @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-16px); } }
+  #results h2 { font-family: 'Nunito', sans-serif; font-size: 2.5rem; font-weight: 900; color: #333; }
+  #results .score-display {
+    font-size: 3.5rem;
+    font-weight: 900;
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, var(--primary), var(--yellow));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  #results p { font-size: 1.1rem; color: #666; max-width: 340px; }
+  .btn-play-again {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), #2e7d32);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 16px 48px;
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgba(102,187,106,0.4);
+    transition: all .2s;
+    margin-top: 10px;
+  }
+  .btn-play-again:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(102,187,106,0.5); }
+
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: 1fr; gap: 14px; padding: 14px; }
+    .card img { width: 90px; height: 90px; }
+    .letter-box { width: 27px; height: 32px; font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="stars">⭐🍎🥕🐟⭐</div>
+    <h1>Food We Eat</h1>
+    <div class="subtitle">Naucz się słówek po angielsku! 🌍</div>
+  </header>
+
+  <div class="mode-bar">
+    <button class="mode-btn easy active" onclick="setMode('easy')">
+      🟩 Łatwy
+      <span class="mode-label">z kratkami</span>
+    </button>
+    <button class="mode-btn hard" onclick="setMode('hard')">
+      🔴 Trudny
+      <span class="mode-label">bez kratek</span>
+    </button>
+  </div>
+
+  <div class="score-bar">
+    <span>⭐ Punkty:</span>
+    <span class="score-pill" id="scoreDisplay">0</span>
+    <span>📝 Słówka:</span>
+    <span class="progress-pill" id="progressDisplay">0 / 14</span>
+  </div>
+
+  <div class="grid" id="wordGrid"></div>
+
+  <div class="footer">
+    <button class="btn-restart" onclick="restartGame()">🔄 Zacznij od nowa</button>
+    <button class="btn-finish" onclick="finishGame()">🏁 Zakończ i sprawdź wynik</button>
+  </div>
+
+  <div id="results">
+    <div class="big-emoji" id="resultEmoji">🎉</div>
+    <h2 id="resultTitle">Świetnie!</h2>
+    <div class="score-display" id="resultScore">14 / 14</div>
+    <p id="resultMsg">Znakomita robota! Uczysz się bardzo dobrze!</p>
+    <button class="btn-play-again" onclick="restartGame()">🎮 Zagraj jeszcze raz</button>
+  </div>
+</div>
+
+<script>
+const WORDS = [
+  { word: 'plants',     emoji: '🌱', img: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=200&h=200&fit=crop&crop=center' },
+  { word: 'animals',   emoji: '🐄', img: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=200&h=200&fit=crop&crop=faces' },
+  { word: 'fruit',     emoji: '🍓', img: 'https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?w=200&h=200&fit=crop&crop=center' },
+  { word: 'vegetables',emoji: '🥦', img: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=200&h=200&fit=crop&crop=center' },
+  { word: 'meat',      emoji: '🥩', img: 'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=200&h=200&fit=crop&crop=center' },
+  { word: 'fish',      emoji: '🐟', img: 'https://images.unsplash.com/photo-1510130387422-82bed34b37e9?w=200&h=200&fit=crop&crop=center' },
+  { word: 'potatoes',  emoji: '🥔', img: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=200&h=200&fit=crop&crop=center' },
+  { word: 'milk',      emoji: '🥛', img: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=200&h=200&fit=crop&crop=center' },
+  { word: 'carrots',   emoji: '🥕', img: 'https://images.unsplash.com/photo-1447175008436-054170c2e979?w=200&h=200&fit=crop&crop=center' },
+  { word: 'peas',      emoji: '🟢', img: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=200&h=200&fit=crop&crop=center' },
+  { word: 'eggs',      emoji: '🥚', img: 'https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=200&h=200&fit=crop&crop=center' },
+  { word: 'ham',       emoji: '🍖', img: 'https://images.unsplash.com/photo-1584691291035-b968e11ed0ed?w=200&h=200&fit=crop&crop=center' },
+  { word: 'cheese',    emoji: '🧀', img: 'https://images.unsplash.com/photo-1452195100486-9cc805987862?w=200&h=200&fit=crop&crop=center' },
+  { word: 'sausages',  emoji: '🌭', img: 'https://images.unsplash.com/photo-1588347785102-2944adc68343?w=200&h=200&fit=crop&crop=center' },
+];
+
+let mode = 'easy';
+let score = 0;
+let answered = new Set();
+
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.mode-btn.' + m).classList.add('active');
+  restartGame();
+}
+
+function shuffle(arr) {
+  return [...arr].sort(() => Math.random() - 0.5);
+}
+
+function buildLetterInputs(word, cardEl, idx) {
+  const row = cardEl.querySelector('.letter-row');
+  row.innerHTML = '';
+
+  if (mode === 'hard') {
+    // HARD MODE: single text input for the whole word
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'word-input';
+    input.placeholder = '✏️ wpisz słowo...';
+    input.autocomplete = 'off';
+    input.autocorrect = 'off';
+    input.spellcheck = false;
+    input.dataset.wordIdx = idx;
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') checkWord(idx); });
+    row.appendChild(input);
+
+  } else {
+    // EASY MODE: one box per letter, all empty (no hints)
+    const parts = word.split(' ');
+    parts.forEach((part, pi) => {
+      if (pi > 0) {
+        const sp = document.createElement('span');
+        sp.className = 'letter-space';
+        row.appendChild(sp);
+      }
+      for (let i = 0; i < part.length; i++) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.maxLength = 1;
+        input.className = 'letter-box';
+        input.dataset.expected = part[i].toLowerCase();
+        input.dataset.wordIdx = idx;
+        input.dataset.partIdx = pi;
+        input.dataset.charIdx = i;
+        input.autocomplete = 'off';
+        input.autocorrect = 'off';
+        input.spellcheck = false;
+        input.addEventListener('input', e => handleInputEasy(e, idx));
+        input.addEventListener('keydown', e => handleKeydownEasy(e, idx));
+        row.appendChild(input);
+      }
+    });
+  }
+}
+
+function handleInputEasy(e, wordIdx) {
+  const inp = e.target;
+  const val = inp.value.replace(/[^a-zA-Z]/g, '');
+  inp.value = val.slice(-1);
+  if (inp.value) {
+    const all = getAllBoxesForCard(wordIdx);
+    const ci = all.indexOf(inp);
+    if (ci < all.length - 1) all[ci + 1].focus();
+  }
+}
+
+function handleKeydownEasy(e, wordIdx) {
+  const inp = e.target;
+  const all = getAllBoxesForCard(wordIdx);
+  const ci = all.indexOf(inp);
+  if (e.key === 'Backspace' && !inp.value && ci > 0) {
+    all[ci - 1].focus();
+    all[ci - 1].value = '';
+  }
+  if (e.key === 'Enter') checkWord(wordIdx);
+}
+
+function getAllBoxesForCard(wordIdx) {
+  return Array.from(document.querySelectorAll(`.letter-box[data-word-idx="${wordIdx}"]`));
+}
+
+function checkWord(idx) {
+  if (answered.has(idx)) return;
+  const word = WORDS[idx].word;
+  const card = document.getElementById('card-' + idx);
+  const expected = word.toLowerCase().replace(/ /g, '');
+
+  let given = '';
+  if (mode === 'hard') {
+    const inp = card.querySelector('.word-input');
+    given = (inp.value || '').toLowerCase().replace(/ /g, '');
+  } else {
+    const boxes = getAllBoxesForCard(idx);
+    given = boxes.map(i => i.value.toLowerCase()).join('');
+  }
+
+  const hintEl = card.querySelector('.hint');
+  const statusEl = card.querySelector('.card-status');
+  const btn = card.querySelector('.check-btn');
+
+  if (given === expected) {
+    card.classList.add('correct');
+    statusEl.textContent = '✅';
+    hintEl.textContent = '';
+    btn.disabled = true;
+    if (mode === 'hard') {
+      const inp = card.querySelector('.word-input');
+      inp.disabled = true;
+      inp.style.background = '#e8f5e9';
+      inp.style.borderColor = '#a5d6a7';
+      inp.style.color = '#2e7d32';
+    } else {
+      getAllBoxesForCard(idx).forEach(i => {
+        i.disabled = true;
+        i.style.background = '#e8f5e9';
+        i.style.borderColor = '#a5d6a7';
+        i.style.color = '#2e7d32';
+      });
+    }
+    score++;
+    answered.add(idx);
+    updateUI();
+  } else {
+    card.classList.add('wrong');
+    setTimeout(() => card.classList.remove('wrong'), 500);
+    statusEl.textContent = '❌';
+    hintEl.textContent = 'Poprawna: ' + word;
+    if (mode === 'hard') {
+      const inp = card.querySelector('.word-input');
+      inp.focus(); inp.select();
+    } else {
+      const firstEmpty = getAllBoxesForCard(idx).find(i => !i.value);
+      if (firstEmpty) firstEmpty.focus();
+    }
+  }
+}
+
+function updateUI() {
+  document.getElementById('scoreDisplay').textContent = score;
+  document.getElementById('progressDisplay').textContent = answered.size + ' / ' + WORDS.length;
+}
+
+function renderGame() {
+  const grid = document.getElementById('wordGrid');
+  grid.innerHTML = '';
+  grid.className = 'grid ' + mode;
+
+  const shuffled = shuffle(WORDS.map((w, i) => ({ ...w, origIdx: i })));
+
+  shuffled.forEach((item, displayIdx) => {
+    const idx = WORDS.findIndex(w => w.word === item.word);
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = 'card-' + idx;
+    card.style.animationDelay = (displayIdx * 0.06) + 's';
+
+    card.innerHTML = `
+      <img src="${item.img}" alt="${item.word}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22><rect width=%22120%22 height=%22120%22 rx=%2260%22 fill=%22%23f5f5f5%22/><text x=%2250%25%22 y=%2255%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2248%22>${item.emoji}</text></svg>'" />
+      <div class="letter-row"></div>
+      <div class="card-status"></div>
+      <div class="hint"></div>
+      <button class="check-btn" onclick="checkWord(${idx})">✔ Sprawdź</button>
+    `;
+
+    grid.appendChild(card);
+    buildLetterInputs(item.word, card, idx);
+  });
+
+  document.getElementById('wordGrid').style.display = '';
+  document.querySelector('.footer').style.display = '';
+  document.getElementById('results').style.display = 'none';
+  updateUI();
+}
+
+function restartGame() {
+  score = 0;
+  answered = new Set();
+  renderGame();
+}
+
+function finishGame() {
+  const total = WORDS.length;
+  const pct = Math.round((score / total) * 100);
+
+  let emoji, title, msg;
+  if (pct === 100) { emoji = '🏆'; title = 'Doskonale!'; msg = 'Wszystkie słówka poprawnie! Jesteś mistrzem!'; }
+  else if (pct >= 70) { emoji = '🎉'; title = 'Świetnie!'; msg = 'Bardzo dobrze! Trochę więcej ćwiczeń i będziesz idealny!'; }
+  else if (pct >= 40) { emoji = '💪'; title = 'Nieźle!'; msg = 'Dobry start! Ćwicz dalej, a będzie coraz lepiej!'; }
+  else { emoji = '📚'; title = 'Ćwicz więcej!'; msg = 'Nie poddawaj się! Każda próba to postęp!'; }
+
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultScore').textContent = score + ' / ' + total;
+  document.getElementById('resultMsg').textContent = msg;
+
+  document.getElementById('wordGrid').style.display = 'none';
+  document.querySelector('.footer').style.display = 'none';
+  document.getElementById('results').style.display = 'flex';
+}
+
+// Init
+renderGame();
+</script>
+</body>
+</html>
