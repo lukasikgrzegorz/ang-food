@@ -106,6 +106,7 @@
   .topic-card:nth-child(1) { animation-delay: .05s; border-color: #ffccbc; }
   .topic-card:nth-child(2) { animation-delay: .15s; border-color: #bbdefb; }
   .topic-card:nth-child(3) { animation-delay: .25s; border-color: #c8e6c9; }
+  .topic-card:nth-child(4) { animation-delay: .35s; border-color: #e1bee7; }
 
   .topic-card::before {
     content: '';
@@ -117,6 +118,7 @@
   .topic-card:nth-child(1)::before { background: linear-gradient(90deg, #ff7043, #ffca28); }
   .topic-card:nth-child(2)::before { background: linear-gradient(90deg, #1e88e5, #ab47bc); }
   .topic-card:nth-child(3)::before { background: linear-gradient(90deg, #2e7d32, #26a69a); }
+  .topic-card:nth-child(4)::before { background: linear-gradient(90deg, #ab47bc, #ec407a); }
 
   @keyframes cardIn {
     from { opacity: 0; transform: translateY(24px) scale(0.97); }
@@ -159,6 +161,7 @@
   .topic-card:nth-child(1) .topic-count { background: #fff3e0; color: #e65100; }
   .topic-card:nth-child(2) .topic-count { background: #e3f2fd; color: #1565c0; }
   .topic-card:nth-child(3) .topic-count { background: #e8f5e9; color: #2e7d32; }
+  .topic-card:nth-child(4) .topic-count { background: #f3e5f5; color: #7b1fa2; }
 
   .topic-btn {
     font-family: 'Baloo 2', cursive;
@@ -184,6 +187,10 @@
   .topic-card:nth-child(3) .topic-btn {
     background: linear-gradient(135deg, #2e7d32, #26a69a);
     box-shadow: 0 4px 16px rgba(46,125,50,0.4);
+  }
+  .topic-card:nth-child(4) .topic-btn {
+    background: linear-gradient(135deg, #ab47bc, #ec407a);
+    box-shadow: 0 4px 16px rgba(171,71,188,0.4);
   }
   .topic-btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
 
@@ -222,6 +229,14 @@
       <div class="topic-emoji">🐘</div>
       <div class="topic-title">Wild Animals</div>
       <div class="topic-desc">Dzikie zwierzęta z całego świata</div>
+      <div class="topic-count">8 słówek</div>
+      <button class="topic-btn">Ćwicz teraz!</button>
+    </a>
+
+    <a href="toys.html" class="topic-card">
+      <div class="topic-emoji">🎮</div>
+      <div class="topic-title">Toys & Games</div>
+      <div class="topic-desc">Zabawki i gry dla dzieci</div>
       <div class="topic-count">8 słówek</div>
       <button class="topic-btn">Ćwicz teraz!</button>
     </a>
