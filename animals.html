@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Games & Activities – Nauka Słówek</title>
+<title>Animals – Nauka Słówek</title>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f0f8ff;
-    --primary: #1e88e5;
-    --secondary: #ab47bc;
-    --accent: #26a69a;
+    --bg: #f0faf4;
+    --primary: #43a047;
+    --secondary: #26a69a;
+    --accent: #ffb300;
     --yellow: #ffca28;
-    --purple: #ef5350;
+    --purple: #ab47bc;
     --card-bg: #ffffff;
     --shadow: 0 8px 32px rgba(0,0,0,0.10);
     --radius: 24px;
@@ -31,7 +31,7 @@
     content: '';
     position: fixed; top: -100px; left: -100px;
     width: 400px; height: 400px;
-    background: radial-gradient(circle, #bbdefb 0%, transparent 70%);
+    background: radial-gradient(circle, #c8e6c9 0%, transparent 70%);
     border-radius: 50%;
     z-index: 0;
     animation: blobMove 8s ease-in-out infinite alternate;
@@ -40,7 +40,7 @@
     content: '';
     position: fixed; bottom: -80px; right: -80px;
     width: 350px; height: 350px;
-    background: radial-gradient(circle, #e1bee7 0%, transparent 70%);
+    background: radial-gradient(circle, #b2dfdb 0%, transparent 70%);
     border-radius: 50%;
     z-index: 0;
     animation: blobMove2 10s ease-in-out infinite alternate;
@@ -50,12 +50,13 @@
 
   #app { position: relative; z-index: 1; }
 
+  /* HEADER */
   header {
-    background: linear-gradient(135deg, #1e88e5 0%, #42a5f5 50%, #80d8ff 100%);
+    background: linear-gradient(135deg, #2e7d32 0%, #43a047 50%, #26a69a 100%);
     padding: 28px 20px 22px;
     text-align: center;
     border-radius: 0 0 40px 40px;
-    box-shadow: 0 6px 24px rgba(30,136,229,0.3);
+    box-shadow: 0 6px 24px rgba(67,160,71,0.3);
   }
   header h1 {
     font-family: 'Nunito', sans-serif;
@@ -73,6 +74,7 @@
   }
   .stars { font-size: 1.4rem; letter-spacing: 4px; }
 
+  /* MODE SELECTOR */
   .mode-bar {
     display: flex;
     justify-content: center;
@@ -122,6 +124,7 @@
     font-weight: 400;
   }
 
+  /* SCORE BAR */
   .score-bar {
     display: flex;
     justify-content: center;
@@ -151,6 +154,7 @@
     font-weight: 700;
   }
 
+  /* WORD GRID */
   .grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -160,6 +164,7 @@
     margin: 0 auto;
   }
 
+  /* WORD CARD */
   .card {
     background: var(--card-bg);
     border-radius: var(--radius);
@@ -185,57 +190,48 @@
   .card:nth-child(4n+1)::before { background: var(--primary); }
   .card:nth-child(4n+2)::before { background: var(--secondary); }
   .card:nth-child(4n+3)::before { background: var(--accent); }
-  .card:nth-child(4n+4)::before { background: var(--yellow); }
+  .card:nth-child(4n+4)::before { background: var(--purple); }
 
   @keyframes cardIn {
     from { opacity: 0; transform: translateY(20px) scale(0.97); }
     to   { opacity: 1; transform: translateY(0) scale(1); }
   }
   .card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.14); }
-  .card.correct { border-color: #66bb6a; background: #f1f8f1; }
-  .card.wrong { border-color: var(--purple); background: #fff5f5; animation: shake .4s ease; }
+  .card.correct { border-color: var(--primary); background: #f1f8f1; }
+  .card.wrong { border-color: #ef5350; background: #fff5f5; animation: shake .4s ease; }
   @keyframes shake {
     0%,100% { transform: translateX(0); }
     20%,60% { transform: translateX(-6px); }
     40%,80% { transform: translateX(6px); }
   }
 
-  .card img {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 4px solid #f5f5f5;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  .card-emoji {
+    font-size: 5rem;
+    line-height: 1;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
   }
 
+  /* LETTER INPUTS */
   .letter-row {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
     gap: 4px;
     width: 100%;
   }
 
-  .letter-word {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    gap: 4px;
-  }
-
   .letter-box {
     width: 32px;
     height: 38px;
-    border: 2px solid #90caf9;
+    border: 2px solid #a5d6a7;
     border-radius: 8px;
     text-align: center;
     font-family: 'Baloo 2', cursive;
     font-size: 1.2rem;
     font-weight: 700;
     color: #333;
-    background: #f0f8ff;
+    background: #f1f8f1;
     outline: none;
     transition: border-color .15s, box-shadow .15s;
     caret-color: var(--primary);
@@ -243,8 +239,14 @@
   }
   .letter-box:focus {
     border-color: var(--secondary);
-    box-shadow: 0 0 0 3px rgba(171,71,188,0.25);
-    background: #f3e5f5;
+    box-shadow: 0 0 0 3px rgba(38,166,154,0.25);
+    background: #e0f2f1;
+  }
+  .letter-box.filled-hint {
+    color: #26a69a;
+    font-weight: 800;
+    background: #e0f2f1;
+    border-color: #4db6ac;
   }
 
   .letter-space {
@@ -270,7 +272,7 @@
   }
   .word-input:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(30,136,229,0.2);
+    box-shadow: 0 0 0 3px rgba(67,160,71,0.2);
   }
   .word-input::placeholder { color: #bbb; font-weight: 400; font-size: 1rem; }
 
@@ -283,16 +285,16 @@
     font-family: 'Baloo 2', cursive;
     font-size: 1rem;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--primary), #1565c0);
+    background: linear-gradient(135deg, var(--secondary), #00897b);
     color: white;
     border: none;
     border-radius: 50px;
     padding: 8px 22px;
     cursor: pointer;
     transition: all .2s;
-    box-shadow: 0 3px 10px rgba(30,136,229,0.35);
+    box-shadow: 0 3px 10px rgba(38,166,154,0.35);
   }
-  .check-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(30,136,229,0.45); }
+  .check-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(38,166,154,0.45); }
   .check-btn:disabled { opacity: 0.5; cursor: default; transform: none; }
 
   .hint {
@@ -303,6 +305,7 @@
     min-height: 1.1rem;
   }
 
+  /* FOOTER BUTTONS */
   .footer {
     display: flex;
     justify-content: center;
@@ -315,18 +318,18 @@
     font-family: 'Baloo 2', cursive;
     font-size: 1.2rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #1e88e5, #42a5f5);
+    background: linear-gradient(135deg, #43a047, #26a69a);
     color: white;
     border: none;
     border-radius: 50px;
     padding: 14px 40px;
     cursor: pointer;
-    box-shadow: 0 6px 20px rgba(30,136,229,0.4);
+    box-shadow: 0 6px 20px rgba(67,160,71,0.4);
     transition: all .2s;
     letter-spacing: 0.5px;
     display: none;
   }
-  .btn-finish:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(30,136,229,0.5); }
+  .btn-finish:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(67,160,71,0.5); }
 
   .btn-restart {
     font-family: 'Baloo 2', cursive;
@@ -342,6 +345,7 @@
   }
   .btn-restart:hover { background: #f5f5f5; border-color: #bbb; transform: translateY(-2px); }
 
+  /* RESULTS SCREEN */
   #results {
     display: none;
     flex-direction: column;
@@ -361,7 +365,7 @@
     font-size: 3.5rem;
     font-weight: 900;
     font-family: 'Nunito', sans-serif;
-    background: linear-gradient(135deg, var(--primary), var(--yellow));
+    background: linear-gradient(135deg, var(--primary), var(--accent));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -371,21 +375,21 @@
     font-family: 'Baloo 2', cursive;
     font-size: 1.3rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #66bb6a, #2e7d32);
+    background: linear-gradient(135deg, var(--primary), #2e7d32);
     color: white;
     border: none;
     border-radius: 50px;
     padding: 16px 48px;
     cursor: pointer;
-    box-shadow: 0 6px 24px rgba(102,187,106,0.4);
+    box-shadow: 0 6px 24px rgba(67,160,71,0.4);
     transition: all .2s;
     margin-top: 10px;
   }
-  .btn-play-again:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(102,187,106,0.5); }
+  .btn-play-again:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(67,160,71,0.5); }
 
   @media (max-width: 480px) {
     .grid { grid-template-columns: 1fr; gap: 14px; padding: 14px; }
-    .card img { width: 90px; height: 90px; }
+    .card-emoji { font-size: 3.5rem; }
     .letter-box { width: 27px; height: 32px; font-size: 1rem; }
   }
 </style>
@@ -393,8 +397,8 @@
 <body>
 <div id="app">
   <header>
-    <div class="stars">⭐🏃🎾🏊⭐</div>
-    <h1>Games & Activities</h1>
+    <div class="stars">🐍🐸🦜🐘🦒</div>
+    <h1>Wild Animals</h1>
     <div class="subtitle">Naucz się słówek po angielsku! 🌍</div>
     <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;font-family:'Baloo 2',cursive;font-weight:700;font-size:1rem;color:white;text-decoration:none;background:rgba(255,255,255,0.25);border-radius:50px;padding:6px 18px;margin-top:12px;transition:background .2s;">← Powrót do menu</a>
   </header>
@@ -414,7 +418,7 @@
     <span>⭐ Punkty:</span>
     <span class="score-pill" id="scoreDisplay">0</span>
     <span>📝 Słówka:</span>
-    <span class="progress-pill" id="progressDisplay">0 / 10</span>
+    <span class="progress-pill" id="progressDisplay">0 / 8</span>
   </div>
 
   <div class="grid" id="wordGrid"></div>
@@ -427,7 +431,7 @@
   <div id="results">
     <div class="big-emoji" id="resultEmoji">🎉</div>
     <h2 id="resultTitle">Świetnie!</h2>
-    <div class="score-display" id="resultScore">10 / 10</div>
+    <div class="score-display" id="resultScore">8 / 8</div>
     <p id="resultMsg">Znakomita robota! Uczysz się bardzo dobrze!</p>
     <button class="btn-play-again" onclick="restartGame()">🎮 Zagraj jeszcze raz</button>
   </div>
@@ -435,16 +439,14 @@
 
 <script>
 const WORDS = [
-  { word: 'climb',        emoji: '🧗', img: 'https://images.unsplash.com/photo-1522163182402-834f871fd851?w=200&h=200&fit=crop&crop=center' },
-  { word: 'hop',          emoji: '🐸', img: 'https://play-lh.googleusercontent.com/proxy/nw19O8Mn7-vIKidz2vl5OM_0Rd81kWiZpwi7uxVWXUb8D1zrglkviTbZX8RRYqJ8sdHh9B4KBliFnFvFOKutI0b2Avdv69zmgYPEBkmRiFxZ_MD-Z-b9qsw=s1920-w1920-h1080' },
-  { word: 'run',          emoji: '🏃', img: 'https://i0.wp.com/post.healthline.com/wp-content/uploads/2020/01/Runner-training-on-running-track-1296x728-header-1296x728.jpg?w=1155&h=1528' },
-  { word: 'skip',         emoji: '🪢', img: 'https://empoweredparents.co/wp-content/uploads/2021/09/jump-rope-variations-for-kids.jpg' },
-  { word: 'swim',         emoji: '🏊', img: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=200&h=200&fit=crop&crop=center' },
-  { word: 'walk',         emoji: '🚶', img: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=200&h=200&fit=crop&crop=center' },
-  { word: 'ball',         emoji: '⚽', img: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=200&h=200&fit=crop&crop=center' },
-  { word: 'hide and seek',emoji: '🙈', img: 'https://4jaxmdwn8eao-u4085.pressidiumcdn.com/wp-content/uploads/2020/09/hide-and-seek-two.jpg' },
-  { word: 'hopscotch',    emoji: '🟦', img: 'https://edumarkingplaygrounddesigns.com/hubfs/Imported_Blog_Media/marking16-b4f43cb9df.jpg' },
-  { word: 'tag',          emoji: '🏷️', img: 'https://static.independent.co.uk/s3fs-public/thumbnails/image/2015/09/27/23/tag.jpg' },
+  { word: 'snake',     emoji: '🐍', img: 'https://images.unsplash.com/photo-1516728778615-2d590ea1855e?w=200&h=200&fit=crop&crop=center' },
+  { word: 'frog',      emoji: '🐸', img: 'https://images.unsplash.com/photo-1551189014-fe516c09df22?w=200&h=200&fit=crop&crop=center' },
+  { word: 'parrot',    emoji: '🦜', img: 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=200&h=200&fit=crop&crop=center' },
+  { word: 'elephant',  emoji: '🐘', img: 'https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?w=200&h=200&fit=crop&crop=center' },
+  { word: 'monkey',    emoji: '🐒', img: 'https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?w=200&h=200&fit=crop&crop=center' },
+  { word: 'mouse',     emoji: '🐭', img: 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=200&h=200&fit=crop&crop=center' },
+  { word: 'giraffe',   emoji: '🦒', img: 'https://images.unsplash.com/photo-1547721064-da6cfb341d50?w=200&h=200&fit=crop&crop=center' },
+  { word: 'crocodile', emoji: '🐊', img: 'https://images.unsplash.com/photo-1598439210625-5067c578f3f6?w=200&h=200&fit=crop&crop=center' },
 ];
 
 let mode = 'easy';
@@ -477,6 +479,7 @@ function buildLetterInputs(word, cardEl, idx) {
     input.dataset.wordIdx = idx;
     input.addEventListener('keydown', e => { if (e.key === 'Enter') checkWord(idx); });
     row.appendChild(input);
+
   } else {
     const parts = word.split(' ');
     parts.forEach((part, pi) => {
@@ -485,8 +488,6 @@ function buildLetterInputs(word, cardEl, idx) {
         sp.className = 'letter-space';
         row.appendChild(sp);
       }
-      const wordGroup = document.createElement('span');
-      wordGroup.className = 'letter-word';
       for (let i = 0; i < part.length; i++) {
         const input = document.createElement('input');
         input.type = 'text';
@@ -501,9 +502,8 @@ function buildLetterInputs(word, cardEl, idx) {
         input.spellcheck = false;
         input.addEventListener('input', e => handleInputEasy(e, idx));
         input.addEventListener('keydown', e => handleKeydownEasy(e, idx));
-        wordGroup.appendChild(input);
+        row.appendChild(input);
       }
-      row.appendChild(wordGroup);
     });
   }
 }
@@ -610,7 +610,7 @@ function renderGame() {
     card.style.animationDelay = (displayIdx * 0.06) + 's';
 
     card.innerHTML = `
-      <img src="${item.img}" alt="${item.word}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22><rect width=%22120%22 height=%22120%22 rx=%2260%22 fill=%22%23f5f5f5%22/><text x=%2250%25%22 y=%2255%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2248%22>${item.emoji}</text></svg>'" />
+      <div class="card-emoji">${item.emoji}</div>
       <div class="letter-row"></div>
       <div class="card-status"></div>
       <div class="hint"></div>
@@ -653,6 +653,7 @@ function finishGame() {
   document.getElementById('results').style.display = 'flex';
 }
 
+// Init
 renderGame();
 </script>
 </body>
